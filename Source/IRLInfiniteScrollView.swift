@@ -21,7 +21,7 @@ import UIKit
  
  - Call  func scrollView.reoderScrollingStack() in your delegate method: func scrollViewDidScroll(scrollView: UIScrollView)
  */
-class IRLInfiniteScrollView: UIScrollView {
+public class IRLInfiniteScrollView: UIScrollView {
     
     /**
      Setup an horizontal infinite UIScrollView. your Subviews must be of the same width and it will be enforce
@@ -87,7 +87,7 @@ class IRLInfiniteScrollView: UIScrollView {
 }
 
 
-extension UIScrollView {
+public extension UIScrollView {
     
     /**
      Setup an horizontal infinite UIScrollView. your Subviews must be of the same width and it will be enforce by subviewsWidth
