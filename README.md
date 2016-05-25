@@ -4,13 +4,14 @@
 An Infinite UIScrollView.
 
 ![Demo](https://github.com/charlymr/IRLInfiniteScrollView/blob/master/Medias/iphone-scroll.gif?raw=true)
-![Licence](https://img.shields.io/packagist/l/doctrine/orm.svg)
 
 A very simple to implement infinite scrolling effect to UIScrollView. You can either use the subclass or the extension provided to UIScrollView if you don't want to subclass.
 
 **MINIMUM iOS REQUIREMENT: 8.0**
 
 **This Project use Swift**
+
+![Licence](https://img.shields.io/packagist/l/doctrine/orm.svg)
 
 ## Installation
 
@@ -33,17 +34,15 @@ $ touch Podfile
 $ edit Podfile
 platform :ios, '8.0'
 pod 'IRLInfiniteScrollView', '~> 0.1'
+```
 
 ### Manually
 
 - [Download IRLInfiniteScrollView](../../archive/master.zip)
 - Copy to your project this file: <strong> IRLInfiniteScrollView.swift </strong>
-- Make sure your project link to  <strong>  'Foundation', 'UIKit'</strong>
+- Make sure your project link to  <strong> 'Foundation', 'UIKit' </strong>
 
-
-
-
-## Getting Started
+### Getting Started
 
 IRLInfiniteScrollView is designed to be a flexible drop in dependency. 
 
@@ -52,7 +51,7 @@ You can either use the provided sublcass IRLInfiniteScrollView or the extension 
 
 ## Examples
 
-### Swift using the provided IRLInfiniteScrollView subclass
+## Swift using the provided IRLInfiniteScrollView subclass
 
 ``` Swift
     
@@ -88,7 +87,7 @@ You can either use the provided sublcass IRLInfiniteScrollView or the extension 
     
 ```
 
-### Swift using the UIScrollView extension
+## Swift using the UIScrollView extension
 
 ``` Swift
     
@@ -132,7 +131,7 @@ You can either use the provided sublcass IRLInfiniteScrollView or the extension 
 
 
 
-## License
+### License
 
 **The MIT License (MIT)**
 
