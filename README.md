@@ -1,12 +1,12 @@
-![Demo](https://github.com/charlymr/IRLInfiniteScrollView/blob/master/Medias/iphone-scroll.gif?raw=true)
 
 # IRLInfiniteScrollView
 
-![Licence](https://img.shields.io/packagist/l/doctrine/orm.svg) &nbsp;  ![Build](https://img.shields.io/travis/joyent/node/v0.6.svg)
-
 An Infinite UIScrollView.
 
-A very simple to implement an infinite scrolling effect to UIScrollView. You can either use the subclass or the extension provided to UIScrollView if you don't want to subclass.
+![Demo](https://github.com/charlymr/IRLInfiniteScrollView/blob/master/Medias/iphone-scroll.gif?raw=true)
+![Licence](https://img.shields.io/packagist/l/doctrine/orm.svg)
+
+A very simple to implement infinite scrolling effect to UIScrollView. You can either use the subclass or the extension provided to UIScrollView if you don't want to subclass.
 
 **MINIMUM iOS REQUIREMENT: 8.0**
 
