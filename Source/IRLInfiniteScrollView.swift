@@ -29,9 +29,10 @@ class IRLInfiniteScrollView: UIScrollView {
      - important: The views width must be the same and it is enforce when calling this method
      
      - parameter subviews: An array of UIView to be inserted in the UIScrollView
-     - parameter margin: Optional margin between your views.
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
      */
-    func setupInfiniteScroll(subviews subViews: [UIView], margin: CGFloat?) {
+    func setupInfiniteScroll(subviews subViews: [UIView], beforeMargin: CGFloat?, afterMargin: CGFloat?) {
         
         guard let firstView = subViews.first else {
             return
@@ -45,11 +46,17 @@ class IRLInfiniteScrollView: UIScrollView {
             view.removeFromSuperview()
         }
         
-        subviewsMargin  = margin ?? 0
+        self.beforeMargin   = beforeMargin ?? 0
+        self.afterMargin  = afterMargin ?? 0
+
         subviewsWidth   = firstView.bounds.size.width
         infinitSubViews = subViews
         
-        setupInfiniteScroll(subviews: subViews, subviewsWidth: subviewsWidth, subviewsMargin: subviewsMargin)
+        setupInfiniteScroll(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
+        
+        if self.beforeMargin > 0 {
+            moveScrollToNearestCard(subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
+        }
         
     }
     
@@ -59,7 +66,7 @@ class IRLInfiniteScrollView: UIScrollView {
      - see: func scrollViewDidScroll(scrollView: UIScrollView)
      */
     func reoderScrollingStack() {
-        reoderScrollingStack(subviews: infinitSubViews, subviewsWidth: subviewsWidth, subviewsMargin: subviewsMargin)
+        reoderScrollingStack(subviews: infinitSubViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -69,15 +76,16 @@ class IRLInfiniteScrollView: UIScrollView {
      - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
      */
     func moveScrollToNearestCard() {
-        moveScrollToNearestCard(subviewsWidth, subviewsMargin: subviewsMargin)
+        moveScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
-    private var subviewsMargin: CGFloat = 0
-    private var subviewsWidth: CGFloat  = 0
-    private var infinitSubViews         = [UIView]()
-    
+    private var beforeMargin:     CGFloat = 0
+    private var afterMargin:    CGFloat   = 0
+    private var subviewsWidth:  CGFloat   = 0
+    private var infinitSubViews           = [UIView]()
     
 }
+
 
 extension UIScrollView {
     
@@ -88,9 +96,10 @@ extension UIScrollView {
      
      - parameter subviews: An array of UIView to be inserted in the UIScrollView
      - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
-     - parameter subviewsMargin: Optional margin between your views.
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
      */
-    func setupInfiniteScroll(subviews subViews: [UIView],  subviewsWidth: CGFloat, subviewsMargin: CGFloat) {
+    func setupInfiniteScroll(subviews subViews: [UIView],  subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
         
         // Some Checks
         for view in subViews {
@@ -101,24 +110,21 @@ extension UIScrollView {
             fatalError("Your UIScrollView doesn't have a delegate associated with it. You must call reoderScrollingStack(subviews: subviewsWidth: subviewsMargin:) in your delegate method func scrollViewDidScroll(scrollView: UIScrollView) in order for the infinite loop to work.")
         }
         
-        
-        
-        let margin: CGFloat     = subviewsMargin / 2
-        let mWidth              = subviewsWidth + 2 * margin
+        let mWidth              = beforeMargin + subviewsWidth + afterMargin
         
         let maxValue: CGFloat   = mWidth * 9000000 // A Big number
         
         for (index, cardView) in subViews.enumerate() {
             
             let frame = CGRectMake(
-                margin + mWidth * CGFloat(index),
-                margin,
-                mWidth - margin*2,
-                bounds.size.height)
+                mWidth * CGFloat(index),
+                cardView.frame.origin.y,
+                subviewsWidth,
+                cardView.bounds.size.height)
             
             cardView.frame = frame
             
-            contentSize = CGSizeMake(maxValue, bounds.size.height-2*margin)
+            contentSize = CGSizeMake(maxValue, contentSize.height)
             addSubview(cardView)
             
         }
@@ -127,7 +133,7 @@ extension UIScrollView {
             contentOffset = CGPointMake(maxValue/2, contentOffset.y)
         }
         
-        reoderScrollingStack(subviews: subViews, subviewsWidth: subviewsWidth, subviewsMargin: subviewsMargin)
+        reoderScrollingStack(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -138,16 +144,16 @@ extension UIScrollView {
 
      - parameter subviews: An array of UIView to be inserted in the UIScrollView
      - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
-     - parameter subviewsMargin: Optional margin between Subviews
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
      */
-    func reoderScrollingStack(subviews subViews: [UIView], subviewsWidth: CGFloat, subviewsMargin: CGFloat ) {
+    func reoderScrollingStack(subviews subViews: [UIView], subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat ) {
         
         for view in subViews {
             assert(view.bounds.size.width == subviewsWidth, "One of your view is not matching your average subviewsWidth!")
         }
         
-        let margin: CGFloat          = subviewsMargin / 2
-        let mWidth                   = subviewsWidth + 2 * margin
+        let mWidth              = beforeMargin + subviewsWidth + afterMargin
         
         let objects                  = subViews.count
         let visibleOffset            = Int(contentOffset.x / mWidth)
@@ -155,12 +161,12 @@ extension UIScrollView {
         
         func swizzle(zeView: UIView, index: Int) {
             
-            let originX = margin + mWidth * CGFloat(index)
+            let originX = mWidth * CGFloat(index)
             
             let frame = CGRectMake(
                 originX,
                 zeView.frame.origin.y,
-                mWidth - margin * 2,
+                subviewsWidth,
                 zeView.frame.size.height)
             
             zeView.frame = frame
@@ -186,18 +192,18 @@ extension UIScrollView {
      - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
 
      - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
-     - parameter subviewsMargin: Optional margin between Subviews
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
      */
-    func moveScrollToNearestCard(subviewsWidth: CGFloat, subviewsMargin: CGFloat) {
+    func moveScrollToNearestCard(subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
         
         if contentOffset.x + bounds.size.width + 20 > contentSize.width {
             return
         }
         
-        let margin: CGFloat         = subviewsMargin / 2
-        let mWidth                  = subviewsWidth + 2 * margin
+        let mWidth         = beforeMargin + subviewsWidth + afterMargin
         
-        let normalizedX    = round(contentOffset.x/mWidth) * mWidth + margin
+        let normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
         setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
         
     }
