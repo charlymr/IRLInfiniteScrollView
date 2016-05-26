@@ -9,14 +9,14 @@
 Pod::Spec.new do |s|
 
 s.name         = "IRLInfiniteScrollView"
-s.version      = "0.1.0"
+s.version      = "0.1.1"
 s.summary      = "An infinite ScrollView."
 s.description  = "A very simple to implement an infinite scrolling effect to UIScrollView. You can either use the subclass or the extension provided to UIScrollView if you don't want to subclass."
 s.license      = { :type => 'GNU GENERAL PUBLIC LICENSE. Denis Martin. Luxembourg', :file => 'LICENSE' }
 
 s.homepage     = "https://github.com/charlymr/IRLInfiniteScrollView"
 s.authors      = { 'Denis Martin' => 'support@irlmobile.com' }
-s.source       = { :git => 'https://github.com/charlymr/IRLInfiniteScrollView.git', :branch => 'master', :tag => '0.1.0'}
+s.source       = { :git => 'https://github.com/charlymr/IRLInfiniteScrollView.git', :branch => 'master', :tag => '0.1.1'}
 
 s.platform     = :ios, '8.0'
 
