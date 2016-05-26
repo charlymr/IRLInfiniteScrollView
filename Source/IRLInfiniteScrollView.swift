@@ -70,6 +70,18 @@ public class IRLInfiniteScrollView: UIScrollView {
     }
     
     /**
+     You should be Call this method in your delegate scrollViewDidScroll(scrollView: UIScrollView)
+     
+     - see: func scrollViewDidScroll(scrollView: UIScrollView)
+
+     - parameter scale: The variable scale between views. Default is 0.3 so a half visible view will have a scale of 0.85 ... ex. (1 - scale / 0.5)
+
+     */
+    func reoderScrollingStackWithScale(scale: CGFloat = 0.3) {
+        reoderScrollingStackWithScale(subviews: infinitSubViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, scale: scale)
+    }
+    
+    /**
      This is optional and can be use to stick teh neares view to the edge when decelerating.
      This method should be call in your delegate scrollViewDidEndDecelerating(scrollView: UIScrollView)
      
@@ -77,6 +89,16 @@ public class IRLInfiniteScrollView: UIScrollView {
      */
     func moveScrollToNearestCard() {
         moveScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
+    }
+    
+    /**
+     This is optional and can be use to stick teh neares view to the edge when decelerating.
+     This method should be call in your delegate scrollViewDidEndDecelerating(scrollView: UIScrollView)
+     
+     - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+     */
+    func centeScrollToNearestCard() {
+        centerScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     private var beforeMargin:     CGFloat = 0
@@ -133,7 +155,6 @@ public extension UIScrollView {
             contentOffset = CGPointMake(maxValue/2, contentOffset.y)
         }
         
-        reoderScrollingStack(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -152,8 +173,100 @@ public extension UIScrollView {
         for view in subViews {
             assert(view.bounds.size.width == subviewsWidth, "One of your view is not matching your average subviewsWidth!")
         }
+        _reorderViews(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
+
+    }
+    
+    /**
+     You should be Call this method in your delegate scrollViewDidScroll(scrollView: UIScrollView)
+     
+     - see: func scrollViewDidScroll(scrollView: UIScrollView)
+     
+     - parameter subviews: An array of UIView to be inserted in the UIScrollView
+     - parameter subviewsWidth: The width to be use for the main view.
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
+     - parameter scale: The variable scale between views. Default is 0.3 so a half visible view will have a scale of 0.85 ... ex. (1 - scale / 0.5)
+     */
+    func reoderScrollingStackWithScale(subviews subViews: [UIView], subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat, scale: CGFloat = 0.3 ) {
+        _reorderViews(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
         
-        let mWidth              = beforeMargin + subviewsWidth + afterMargin
+        for view in subViews {
+            
+            let union = CGRectUnion(view.frame, CGRectMake(contentOffset.x, contentOffset.y, bounds.size.width, bounds.size.height))
+            
+            if union.size.width > 1 {
+                
+                var scaleFactor: CGFloat = 1 - (union.size.width / view.bounds.size.width)
+                scaleFactor = scaleFactor < -1 ? -1 : scaleFactor
+                scaleFactor = scaleFactor > 0 ? 0 : scaleFactor
+                let normScale   = 1 + (scale * scaleFactor)
+                let sclaedWidth = subviewsWidth * (1-normScale)
+                
+                var transform  = CGAffineTransformMakeScale(normScale, normScale)
+                view.transform = transform
+
+            }
+            
+            if union.size.width == view.bounds.size.width {
+                bringSubviewToFront(view)
+            }
+            
+        }
+
+    }
+    
+    /**
+     This is optional and can be use to stick the neares view to the edge when decelerating.
+     This method should be call in your delegate scrollViewDidEndDecelerating(scrollView: UIScrollView)
+     
+     - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+
+     - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
+     */
+    func moveScrollToNearestCard(subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
+        
+        if contentOffset.x + bounds.size.width + 20 > contentSize.width {
+            return
+        }
+        
+        let mWidth         = beforeMargin + subviewsWidth + afterMargin
+        
+        let normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
+        setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
+        
+    }
+    
+    /**
+     This is optional and can be use to center nearest view when decelerating.
+     This method should be call in your delegate scrollViewDidEndDecelerating(scrollView: UIScrollView)
+     
+     - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+     
+     - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
+     */
+    func centerScrollToNearestCard(subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
+        
+        if contentOffset.x + bounds.size.width + 20 > contentSize.width {
+            return
+        }
+        
+        let mWidth         = beforeMargin + subviewsWidth + afterMargin
+        
+        var normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
+        normalizedX        = normalizedX - (bounds.size.width - subviewsWidth) / 4
+            
+        setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
+        
+    }
+    
+    private func _reorderViews(subviews subViews: [UIView], subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat ) {
+        
+        let mWidth                   = beforeMargin + subviewsWidth + afterMargin
         
         let objects                  = subViews.count
         let visibleOffset            = Int(contentOffset.x / mWidth)
@@ -182,30 +295,7 @@ public extension UIScrollView {
             }
             
         }
-        
-    }
-    
-    /**
-     This is optional and can be use to stick teh neares view to the edge when decelerating.
-     This method should be call in your delegate scrollViewDidEndDecelerating(scrollView: UIScrollView)
-     
-     - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
 
-     - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
-     - parameter beforeMargin: Optional margin before your views.
-     - parameter afterMargin: Optional margin after your views.
-     */
-    func moveScrollToNearestCard(subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
-        
-        if contentOffset.x + bounds.size.width + 20 > contentSize.width {
-            return
-        }
-        
-        let mWidth         = beforeMargin + subviewsWidth + afterMargin
-        
-        let normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
-        setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
-        
     }
     
 }
