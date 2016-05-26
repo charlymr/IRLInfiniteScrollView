@@ -201,9 +201,7 @@ public extension UIScrollView {
                 scaleFactor = scaleFactor < -1 ? -1 : scaleFactor
                 scaleFactor = scaleFactor > 0 ? 0 : scaleFactor
                 let normScale   = 1 + (scale * scaleFactor)
-                let sclaedWidth = subviewsWidth * (1-normScale)
-                
-                var transform  = CGAffineTransformMakeScale(normScale, normScale)
+                let transform  = CGAffineTransformMakeScale(normScale, normScale)
                 view.transform = transform
 
             }
