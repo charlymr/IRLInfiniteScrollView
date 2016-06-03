@@ -33,12 +33,26 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if decelerate == false {
+            scrollViewDidEndDecelerating(scrollView)
+        }
+    }
+
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         
         // Optional move the view
         if let infiniteScrollView = scrollView as? IRLInfiniteScrollView {
-            infiniteScrollView.moveScrollToNearestCard()
+            infiniteScrollView.centeScrollToNearestCard()
         }
+    }
+    
+    
+    @IBAction func scrollTo(sender: UIButton) {
+     
+        let index = UInt( sender.titleForState(.Normal)! )!
+        scrollView.centerScrollToCardAtIndex(index, animated: true)
+        
     }
     
 }

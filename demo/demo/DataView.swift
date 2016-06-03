@@ -12,7 +12,7 @@ func generateSomeUIViewForOurDemo(frame: CGRect) -> [UIView] {
     
     var subviews = [UILabel]()
     
-    for index in 1...5 {
+    for index in 0...19 {
         let label = UILabel(frame: frame)
         label.backgroundColor = UIColor.lightGrayColor()
         label.text = "\(index)"

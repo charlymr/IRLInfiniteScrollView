@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -26,12 +26,39 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="P6a-Qv-Eia"/>
                                 </connections>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7on-0i-Evm">
+                                <rect key="frame" x="236" y="141" width="30" height="30"/>
+                                <state key="normal" title="12"/>
+                                <connections>
+                                    <action selector="scrollTo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="V2J-7t-EmI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xI8-pG-fZD">
+                                <rect key="frame" x="335" y="141" width="30" height="30"/>
+                                <state key="normal" title="16"/>
+                                <connections>
+                                    <action selector="scrollTo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mQ0-ZC-V9C"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PuC-PA-are">
+                                <rect key="frame" x="285" y="141" width="30" height="30"/>
+                                <state key="normal" title="1"/>
+                                <connections>
+                                    <action selector="scrollTo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XTa-Qh-gqP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xI8-pG-fZD" firstAttribute="leading" secondItem="PuC-PA-are" secondAttribute="trailing" constant="20" id="7ph-gJ-lIT"/>
                             <constraint firstItem="p6d-13-16o" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="F5a-Lp-k5q"/>
                             <constraint firstAttribute="trailing" secondItem="p6d-13-16o" secondAttribute="trailing" id="Mwe-Ix-A6S"/>
                             <constraint firstItem="p6d-13-16o" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="NNt-uc-P8V"/>
+                            <constraint firstItem="xI8-pG-fZD" firstAttribute="centerY" secondItem="7on-0i-Evm" secondAttribute="centerY" id="UlV-UE-WPM"/>
+                            <constraint firstItem="p6d-13-16o" firstAttribute="top" secondItem="PuC-PA-are" secondAttribute="bottom" constant="29" id="WNB-GS-zmJ"/>
+                            <constraint firstItem="PuC-PA-are" firstAttribute="centerY" secondItem="7on-0i-Evm" secondAttribute="centerY" id="eiZ-Fj-xz7"/>
+                            <constraint firstItem="PuC-PA-are" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="jco-TP-peg"/>
+                            <constraint firstItem="PuC-PA-are" firstAttribute="leading" secondItem="7on-0i-Evm" secondAttribute="trailing" constant="19" id="mcI-0D-qH1"/>
                         </constraints>
                     </view>
                     <connections>

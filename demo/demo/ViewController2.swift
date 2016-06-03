@@ -32,9 +32,22 @@ class ViewControllerWithoutSublclassingUISScrollView: UIViewController, UIScroll
         scrollView.reoderScrollingStack(subviews: subviews, subviewsWidth: 750/2, beforeMargin: 10, afterMargin: 10)
     }
     
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if decelerate == false {
+            scrollViewDidEndDecelerating(scrollView)
+        }
+    }
+    
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         // Optional move the view
         scrollView.moveScrollToNearestCard(750/2, beforeMargin: 10, afterMargin: 10)
+    }
+    
+    @IBAction func scrollTo(sender: UIButton) {
+        
+        let index = UInt( sender.titleForState(.Normal)! )!
+        scrollView.centerScrollToCardAtIndex(index, objectCounts: UInt(subviews.count), subviewsWidth: 750/2-20, beforeMargin: 10, afterMargin: 10, animated: true)
+        
     }
     
 }

@@ -101,6 +101,16 @@ public class IRLInfiniteScrollView: UIScrollView {
         centerScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
+    /**
+     This is optional and can be Call Anytime you want to scroll to a particular Idnex.
+     
+     - parameter index: The Idnex you wish to move to.
+     - parameter animated: If it should be animated or not
+     */
+    func centerScrollToCardAtIndex(index: UInt, animated: Bool) {
+        centerScrollToCardAtIndex(index, objectCounts: UInt(infinitSubViews.count), subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, animated: animated)
+    }
+    
     private var beforeMargin:     CGFloat = 0
     private var afterMargin:    CGFloat   = 0
     private var subviewsWidth:  CGFloat   = 0
@@ -109,6 +119,8 @@ public class IRLInfiniteScrollView: UIScrollView {
 }
 
 
+
+// Setup
 public extension UIScrollView {
     
     /**
@@ -156,6 +168,10 @@ public extension UIScrollView {
         }
         
     }
+}
+
+// Reordering
+public extension UIScrollView {
     
     /**
      You should be Call this method in your delegate scrollViewDidScroll(scrollView: UIScrollView)
@@ -213,6 +229,10 @@ public extension UIScrollView {
         }
 
     }
+}
+
+// Work with the Offset
+public extension UIScrollView {
     
     /**
      This is optional and can be use to stick the neares view to the edge when decelerating.
@@ -254,15 +274,41 @@ public extension UIScrollView {
         }
         
         let mWidth         = beforeMargin + subviewsWidth + afterMargin
+        let normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
         
-        var normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
-        normalizedX        = normalizedX - (bounds.size.width - subviewsWidth) / 4
-            
         setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
         
     }
     
-    private func _reorderViews(subviews subViews: [UIView], subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat ) {
+    /**
+     This method let you mmove to a paticular index
+     
+     - parameter index: The Idnex you wish to move to.
+     - parameter objectCounts: Number of objects.
+     - parameter subviewsWidth: The width to be use for the subviews. Warning you must have the same witdh as the subviews you give or this method will fail
+     - parameter beforeMargin: Optional margin before your views.
+     - parameter afterMargin: Optional margin after your views.
+     */
+    func centerScrollToCardAtIndex(index: UInt, objectCounts: UInt, subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat, animated: Bool) {
+
+        let mWidth           = beforeMargin + subviewsWidth + afterMargin
+        
+        let normalizedX      = round(contentOffset.x/mWidth) * mWidth
+        let scrollFact       = UInt (normalizedX / mWidth)
+        let scrollOffetFact  = UInt (scrollFact / objectCounts) * objectCounts
+        let xFirstIndex      = CGFloat (scrollOffetFact) * mWidth - beforeMargin
+        let offsetX          = xFirstIndex + mWidth * CGFloat (index)
+        
+        setContentOffset(CGPointMake(offsetX, contentOffset.y), animated: true)
+        
+    }
+    
+    
+}
+
+private extension UIScrollView {
+    
+    func _reorderViews(subviews subViews: [UIView], subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat ) {
         
         let mWidth                   = beforeMargin + subviewsWidth + afterMargin
         
