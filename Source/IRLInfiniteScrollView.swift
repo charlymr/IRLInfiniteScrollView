@@ -146,7 +146,7 @@ public extension UIScrollView {
         
         let mWidth              = beforeMargin + subviewsWidth + afterMargin
         
-        let maxValue: CGFloat   = mWidth * 9000000 // A Big number
+        let maxValue: CGFloat   = mWidth * 10000 // A Big number
         
         for (index, cardView) in subViews.enumerate() {
             
