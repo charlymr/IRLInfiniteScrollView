@@ -209,7 +209,7 @@ public extension UIScrollView {
         
         for view in subViews {
             
-            let union = CGRectUnion(view.frame, CGRectMake(contentOffset.x, contentOffset.y, bounds.size.width, bounds.size.height))
+            let union = view.frame.union(CGRect(origin: contentOffset, size: bounds.size))
             
             if union.size.width > 1 {
                 
@@ -217,7 +217,7 @@ public extension UIScrollView {
                 scaleFactor = scaleFactor < -1 ? -1 : scaleFactor
                 scaleFactor = scaleFactor > 0 ? 0 : scaleFactor
                 let normScale   = 1 + (scale * scaleFactor)
-                let transform  = CGAffineTransformMakeScale(normScale, normScale)
+               let transform  = CGAffineTransform(scaleX: normScale, y: normScale)
                 view.transform = transform
 
             }
@@ -299,7 +299,7 @@ public extension UIScrollView {
         let xFirstIndex      = CGFloat (scrollOffetFact) * mWidth - beforeMargin
         let offsetX          = xFirstIndex + mWidth * CGFloat (index)
         
-        setContentOffset(CGPointMake(offsetX, contentOffset.y), animated: true)
+        setContentOffset(CGPoint(x: offsetX, y: contentOffset.y), animated: true)
         
     }
     
@@ -320,11 +320,11 @@ private extension UIScrollView {
             
             let originX = mWidth * CGFloat(index)
             
-            let frame = CGRectMake(
-                originX,
-                zeView.frame.origin.y,
-                subviewsWidth,
-                zeView.frame.size.height)
+            let frame = CGRect(
+                x:      originX,
+                y:      zeView.frame.origin.y,
+                width:  subviewsWidth,
+                height: zeView.frame.size.height)
             
             zeView.frame = frame
             
@@ -335,7 +335,7 @@ private extension UIScrollView {
             swizzle(zeView: view, index: firstOffset+index)
             
             if self.contentOffset.x > view.frame.origin.x + view.frame.size.width {
-                swizzle(view, index: firstOffset+index+objects)
+                swizzle(zeView: view, index: firstOffset+index+objects)
             }
             
         }
