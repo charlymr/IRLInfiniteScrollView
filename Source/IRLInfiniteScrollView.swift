@@ -55,7 +55,7 @@ public class IRLInfiniteScrollView: UIScrollView {
         setupInfiniteScroll(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
         
         if self.beforeMargin > 0 {
-            moveScrollToNearestCard(subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
+            moveScrollToNearestCard(subviewsWidth: subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
         }
         
     }
@@ -88,7 +88,7 @@ public class IRLInfiniteScrollView: UIScrollView {
      - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
      */
     func moveScrollToNearestCard() {
-        moveScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
+        moveScrollToNearestCard(subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -98,7 +98,7 @@ public class IRLInfiniteScrollView: UIScrollView {
      - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
      */
     func centeScrollToNearestCard() {
-        centerScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
+        centerScrollToNearestCard(subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -108,7 +108,7 @@ public class IRLInfiniteScrollView: UIScrollView {
      - parameter animated: If it should be animated or not
      */
     func centerScrollToCardAtIndex(index: UInt, animated: Bool) {
-        centerScrollToCardAtIndex(index, objectCounts: UInt(infinitSubViews.count), subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, animated: animated)
+        centerScrollToCardAtIndex(index: index, objectCounts: UInt(infinitSubViews.count), subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, animated: animated)
     }
     
     private var beforeMargin:     CGFloat = 0
@@ -148,23 +148,23 @@ public extension UIScrollView {
         
         let maxValue: CGFloat   = mWidth * 10000 // A Big number
         
-        for (index, cardView) in subViews.enumerate() {
+        for (index, cardView) in subViews.enumerated() {
             
-            let frame = CGRectMake(
-                mWidth * CGFloat(index),
-                cardView.frame.origin.y,
-                subviewsWidth,
-                cardView.bounds.size.height)
+            let frame = CGRect(
+                x:      mWidth * CGFloat(index),
+                y:      cardView.frame.origin.y,
+                width:  subviewsWidth,
+                height: cardView.bounds.size.height)
             
             cardView.frame = frame
             
-            contentSize = CGSizeMake(maxValue, contentSize.height)
+            contentSize = CGSize(width: maxValue, height: contentSize.height)
             addSubview(cardView)
             
         }
         
         if contentOffset.x == 0 {
-            contentOffset = CGPointMake(maxValue/2, contentOffset.y)
+            contentOffset = CGPoint(x: maxValue/2, y: contentOffset.y)
         }
         
     }
@@ -223,7 +223,7 @@ public extension UIScrollView {
             }
             
             if union.size.width == view.bounds.size.width {
-                bringSubviewToFront(view)
+                bringSubview(toFront: view)
             }
             
         }
@@ -253,7 +253,7 @@ public extension UIScrollView {
         let mWidth         = beforeMargin + subviewsWidth + afterMargin
         
         let normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
-        setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
+        setContentOffset(CGPoint(x: normalizedX, y: contentOffset.y), animated: true)
         
     }
     
@@ -276,7 +276,7 @@ public extension UIScrollView {
         let mWidth         = beforeMargin + subviewsWidth + afterMargin
         let normalizedX    = round(contentOffset.x/mWidth) * mWidth - beforeMargin
         
-        setContentOffset(CGPointMake(normalizedX, contentOffset.y), animated: true)
+        setContentOffset(CGPoint(x: normalizedX, y: contentOffset.y), animated: true)
         
     }
     
@@ -331,8 +331,8 @@ private extension UIScrollView {
         }
         
         // Stack swizle here
-        for (index,view) in subViews.enumerate() {
-            swizzle(view, index: firstOffset+index)
+        for (index,view) in subViews.enumerated() {
+            swizzle(zeView: view, index: firstOffset+index)
             
             if self.contentOffset.x > view.frame.origin.x + view.frame.size.width {
                 swizzle(view, index: firstOffset+index+objects)
