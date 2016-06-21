@@ -55,7 +55,7 @@ public class IRLInfiniteScrollView: UIScrollView {
         setupInfiniteScroll(subviews: subViews, subviewsWidth: subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
         
         if self.beforeMargin > 0 {
-            moveScrollToNearestCard(subviewsWidth: subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
+            moveScrollToNearestCard(subviewsWidth, beforeMargin: self.beforeMargin, afterMargin: self.afterMargin)
         }
         
     }
@@ -77,7 +77,7 @@ public class IRLInfiniteScrollView: UIScrollView {
      - parameter scale: The variable scale between views. Default is 0.3 so a half visible view will have a scale of 0.85 ... ex. (1 - scale / 0.5)
 
      */
-    func reoderScrollingStackWithScale(scale: CGFloat = 0.3) {
+    func reoderScrollingStackWithScale(_ scale: CGFloat = 0.3) {
         reoderScrollingStackWithScale(subviews: infinitSubViews, subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, scale: scale)
     }
     
@@ -88,7 +88,7 @@ public class IRLInfiniteScrollView: UIScrollView {
      - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
      */
     func moveScrollToNearestCard() {
-        moveScrollToNearestCard(subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
+        moveScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -98,7 +98,7 @@ public class IRLInfiniteScrollView: UIScrollView {
      - see: func scrollViewDidEndDecelerating(scrollView: UIScrollView)
      */
     func centeScrollToNearestCard() {
-        centerScrollToNearestCard(subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
+        centerScrollToNearestCard(subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin)
     }
     
     /**
@@ -107,8 +107,8 @@ public class IRLInfiniteScrollView: UIScrollView {
      - parameter index: The Idnex you wish to move to.
      - parameter animated: If it should be animated or not
      */
-    func centerScrollToCardAtIndex(index: UInt, animated: Bool) {
-        centerScrollToCardAtIndex(index: index, objectCounts: UInt(infinitSubViews.count), subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, animated: animated)
+    func centerScrollToCardAtIndex(_ index: UInt, animated: Bool) {
+        centerScrollToCardAtIndex(index, objectCounts: UInt(infinitSubViews.count), subviewsWidth: subviewsWidth, beforeMargin: beforeMargin, afterMargin: afterMargin, animated: animated)
     }
     
     private var beforeMargin:     CGFloat = 0
@@ -244,7 +244,7 @@ public extension UIScrollView {
      - parameter beforeMargin: Optional margin before your views.
      - parameter afterMargin: Optional margin after your views.
      */
-    func moveScrollToNearestCard(subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
+    func moveScrollToNearestCard(_ subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
         
         if contentOffset.x + bounds.size.width + 20 > contentSize.width {
             return
@@ -267,7 +267,7 @@ public extension UIScrollView {
      - parameter beforeMargin: Optional margin before your views.
      - parameter afterMargin: Optional margin after your views.
      */
-    func centerScrollToNearestCard(subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
+    func centerScrollToNearestCard(_ subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat) {
         
         if contentOffset.x + bounds.size.width + 20 > contentSize.width {
             return
@@ -289,7 +289,7 @@ public extension UIScrollView {
      - parameter beforeMargin: Optional margin before your views.
      - parameter afterMargin: Optional margin after your views.
      */
-    func centerScrollToCardAtIndex(index: UInt, objectCounts: UInt, subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat, animated: Bool) {
+    func centerScrollToCardAtIndex(_ index: UInt, objectCounts: UInt, subviewsWidth: CGFloat, beforeMargin: CGFloat, afterMargin: CGFloat, animated: Bool) {
 
         let mWidth           = beforeMargin + subviewsWidth + afterMargin
         
@@ -316,7 +316,7 @@ private extension UIScrollView {
         let visibleOffset            = Int(contentOffset.x / mWidth)
         let firstOffset              = Int(visibleOffset / objects) * objects
         
-        func swizzle(zeView: UIView, index: Int) {
+        func swizzle(_ zeView: UIView, index: Int) {
             
             let originX = mWidth * CGFloat(index)
             
@@ -332,10 +332,10 @@ private extension UIScrollView {
         
         // Stack swizle here
         for (index,view) in subViews.enumerated() {
-            swizzle(zeView: view, index: firstOffset+index)
+            swizzle(view, index: firstOffset+index)
             
             if self.contentOffset.x > view.frame.origin.x + view.frame.size.width {
-                swizzle(zeView: view, index: firstOffset+index+objects)
+                swizzle(view, index: firstOffset+index+objects)
             }
             
         }
